@@ -4,8 +4,9 @@ import view.ExpenseTrackerView;
 
 import java.util.List;
 
-
-
+import filter.AmountFilter;
+import filter.CategoryFilter;
+import filter.TransactionFilter;
 import model.ExpenseTrackerModel;
 import model.Transaction;
 public class ExpenseTrackerController {
@@ -44,6 +45,38 @@ public class ExpenseTrackerController {
     refresh();
     return true;
   }
+
+  /**
+ * Filters the model’s transactions by either amount *or* category
+ * and refreshes the view.  Returns the filtered list so tests can
+ * assert on it.
+ *
+ * @param amountTxt   text from an amount input (may be empty)
+ * @param categoryTxt text from a category input (may be empty)
+ * @return list of transactions that match the filter
+ * @throws IllegalArgumentException if both or neither fields are filled
+ */
+public List<Transaction> applyFilter(String amountTxt, String categoryTxt) {
+    TransactionFilter filter;
+
+    boolean hasAmount   = !amountTxt.trim().isEmpty();
+    boolean hasCategory = !categoryTxt.trim().isEmpty();
+
+    if (hasAmount == hasCategory) {      // either both filled or both empty
+        throw new IllegalArgumentException("Enter *either* amount OR category");
+    }
+
+    if (hasAmount) {
+        double amt = Double.parseDouble(amountTxt);
+        filter = new AmountFilter(amt);
+    } else { // hasCategory
+        filter = new CategoryFilter(categoryTxt);
+    }
+
+    List<Transaction> result = filter.filter(model.getTransactions());
+    view.refreshTable(result);           // reuse your existing table method
+    return result;                       // handy for unit tests
+}
   
   // Other controller methods
 }

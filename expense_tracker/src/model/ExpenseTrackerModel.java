@@ -24,4 +24,12 @@ public class ExpenseTrackerModel {
     return Collections.unmodifiableList(transactions);
   }
 
+  // Returns the sum of all transaction amounts
+  public double getTotalCost() {
+    return transactions.stream()
+                      .mapToDouble(Transaction::getAmount)
+                      .sum();
+  }
+
+
 }

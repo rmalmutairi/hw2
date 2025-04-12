@@ -1,0 +1,38 @@
+undo.txt
+
+==========================
+Undo Feature Design
+==========================
+
+Overview:
+We maintain a stack of Command objects in the Model. Each command knows
+how to 'execute' and 'undo'. For instance, AddTransactionCommand adds
+a Transaction to the model, and RemoveTransactionCommand removes it.
+
+Data Structure:
+- Deque<Command> undoStack in ExpenseTrackerModel.
+
+Workflow:
+1. Whenever the user performs an action (e.g., add or remove transaction),
+   the Controller creates the corresponding Command and calls execute().
+   The Command is then pushed onto undoStack.
+
+2. If the user clicks "Undo", Controller pops the top Command from undoStack
+   and calls its undo() method.
+
+3. The View has an "Undo" button. It's disabled whenever undoStack is empty.
+
+Sample Command Interface:
+public interface Command {
+    void execute();
+    void undo();
+}
+
+Example Commands:
+- AddTransactionCommand: holds a Transaction; execute() calls model.addTransaction(),
+  undo() calls model.removeTransaction().
+- RemoveTransactionCommand: holds a Transaction; execute() calls model.removeTransaction(),
+  undo() calls model.addTransaction().
+
+Benefit:
+Users can reverse mistakes. If the stack is empty, there's nothing to undo.

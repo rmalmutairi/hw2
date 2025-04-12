@@ -9,7 +9,7 @@ public class FilterAmountTest {
     @Test
     public void filterByAmount_returnsOnlyMatches() {
         ExpenseTrackerModel m = new ExpenseTrackerModel();
-        DummyView v = new DummyView();
+        DummyViewHelper v = new DummyViewHelper();
         ExpenseTrackerController c = new ExpenseTrackerController(m, v);
 
         m.addTransaction(new Transaction(10.0, "food"));
